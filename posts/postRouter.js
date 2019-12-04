@@ -54,7 +54,16 @@ router.delete('/:id', validatePostId, (req, res) => {
 });
 
 router.put('/:id', validatePostId, (req, res) => {
-  res.send('Still working')
+  res.send(req.body);
+
+  Posts.update(req.params.id, req.body)
+    .then(updatedPost => {
+      res.status(200).json(updatedPost)
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(500).json({error: "Unable to update the post"})
+    })
 });
 
 module.exports = router;

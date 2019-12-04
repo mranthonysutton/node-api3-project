@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Users = require('./userDb');
+const Posts = require('../posts/postDb');
 
 //custom middleware
 
@@ -37,6 +38,14 @@ function validateUser(req, res, next) {
 
 function validatePost(req, res, next) {
   // do your magic!
+
+  if (!req.body) {
+    res.status(400).json({message: "Missing post data."});
+  } else if (!req.body.text) {
+    res.status(400).json({message: "Missing required text field."});
+  } else {
+    next();
+  }
 }
 
 router.post('/', validateUser, (req, res) => {
@@ -51,8 +60,20 @@ router.post('/', validateUser, (req, res) => {
     })
 });
 
-router.post('/:id/posts', (req, res) => {
+router.post('/:id/posts', [validateUserId, validatePost], (req, res) => {
   // do your magic!
+  const userId = req.params.id;
+  const newPost = req.body;
+
+  // The post needs a user_id, so it knows who to pass the object too, so when we send the response data, we need to include the user id that is passed through
+  Posts.insert({...newPost, user_id: userId})
+    .then(post => {
+      res.status(201).json(post);
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(500).json({error: "Unable to add post to the specified user."});
+    });
 });
 
 router.get('/', (req, res) => {
