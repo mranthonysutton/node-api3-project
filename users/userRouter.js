@@ -12,6 +12,7 @@ router.post('/:id/posts', (req, res) => {
 
 router.get('/', (req, res) => {
   // do your magic!
+  res.send('from users');
 });
 
 router.get('/:id', (req, res) => {

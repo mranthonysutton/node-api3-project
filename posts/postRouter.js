@@ -4,6 +4,7 @@ const router = express.Router();
 
 router.get('/', (req, res) => {
   // do your magic!
+  res.send('from posts');
 });
 
 router.get('/:id', (req, res) => {
