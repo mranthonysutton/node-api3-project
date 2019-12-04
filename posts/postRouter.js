@@ -13,7 +13,7 @@ function validatePostId(req, res, next) {
         req.response = post;
         next();
       } else {
-        res.status(400).json({message: "The specified post ID does not exist!!!"})
+        res.status(400).json({message: "The specified post ID does not exist."})
       }
     })
     .catch(error => {
@@ -35,15 +35,7 @@ router.get('/', (req, res) => {
 
 router.get('/:id', validatePostId, (req, res) => {
   // do your magic!
-  Posts.getById(req.response.id)
-    .then(response => {
-      // Checks if a post response is sent back and displays the response, else, returns a 404
-      res.status(200).json(response);
-    })
-    .catch(error => {
-      console.log(error);
-      res.status(500).json({error: "Unable to retrieve posts."});
-    });
+  res.send(req.response);
 });
 
 router.delete('/:id', validatePostId, (req, res) => {
